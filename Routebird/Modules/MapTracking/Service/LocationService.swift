@@ -8,6 +8,12 @@
 import Foundation
 import CoreLocation
 
+protocol LocationServiceProtocol: AnyObject {
+    var delegate: LocationServiceDelegate? { get set }
+    func startTracking()
+    func stopTracking()
+}
+
 protocol LocationServiceDelegate: AnyObject {
     func locationService(_ service: LocationService, didUpdateLocation location: CLLocation)
 }
@@ -61,3 +67,11 @@ extension LocationService: CLLocationManagerDelegate {
         }
     }
 }
+
+#if DEBUG
+extension LocationService {
+    func simulateLocationUpdate(_ location: CLLocation) {
+        delegate?.locationService(self, didUpdateLocation: location)
+    }
+}
+#endif
