@@ -9,26 +9,6 @@
 import Foundation
 import CoreLocation
 
-// MARK: - Marker Model
-struct Marker: Equatable {
-    let id: UUID
-    let latitude: CLLocationDegrees
-    let longitude: CLLocationDegrees
-    let timestamp: Date
-    var address: String? = nil
-
-    var coordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-    }
-
-    init(coordinate: CLLocationCoordinate2D) {
-        self.id = UUID()
-        self.latitude = coordinate.latitude
-        self.longitude = coordinate.longitude
-        self.timestamp = Date()
-    }
-}
-
 protocol MapViewModelDelegate: AnyObject {
     func didAddNewMarker(_ marker: Marker)
     func didResetRoute()
@@ -40,12 +20,12 @@ final class MapViewModel {
     // MARK: - Properties
 
     weak var delegate: MapViewModelDelegate?
-
     private(set) var markers: [Marker] = []
     var isTracking = false
     private var lastRecordedLocation: CLLocation?
 
     private let geocoder = CLGeocoder()
+    private let routeKey = "routeMarkers"
 
     // MARK: - Tracking Control
 
@@ -57,6 +37,7 @@ final class MapViewModel {
         markers.removeAll()
         lastRecordedLocation = nil
         delegate?.didResetRoute()
+        saveRoute()
     }
 
     // MARK: - Location Handling
@@ -73,6 +54,18 @@ final class MapViewModel {
         }
     }
 
+    // MARK: - Marker Logic
+
+    private func addMarker(for location: CLLocation) {
+        lastRecordedLocation = location
+        let marker = Marker(coordinate: location.coordinate)
+        markers.append(marker)
+        delegate?.didAddNewMarker(marker)
+        saveRoute()
+    }
+
+    // MARK: - Reverse Geocoding
+
     func resolveAddress(for marker: Marker) {
         let location = CLLocation(latitude: marker.latitude, longitude: marker.longitude)
         geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, _ in
@@ -82,12 +75,33 @@ final class MapViewModel {
         }
     }
 
-    // MARK: - Private Marker Logic
+    // MARK: - Persistence
 
-    private func addMarker(for location: CLLocation) {
-        lastRecordedLocation = location
-        let marker = Marker(coordinate: location.coordinate)
-        markers.append(marker)
-        delegate?.didAddNewMarker(marker)
+    func saveRoute() {
+        let encoder = JSONEncoder()
+        if let data = try? encoder.encode(markers) {
+            print("💾 Saving \(markers.count) markers")
+            UserDefaults.standard.set(data, forKey: routeKey)
+        } else {
+            print("❌ Failed to encode markers")
+        }
+    }
+    func loadRoute() {
+        let decoder = JSONDecoder()
+        if let data = UserDefaults.standard.data(forKey: routeKey),
+           let savedMarkers = try? decoder.decode([Marker].self, from: data) {
+            print("📥 Loaded \(savedMarkers.count) markers")
+            markers = savedMarkers
+            delegate?.didResetRoute()
+            for marker in markers {
+                delegate?.didAddNewMarker(marker)
+            }
+            if let last = markers.last {
+                let loc = CLLocation(latitude: last.latitude, longitude: last.longitude)
+                lastRecordedLocation = loc
+            }
+        } else {
+            print("📭 No saved markers found in UserDefaults")
+        }
     }
 }

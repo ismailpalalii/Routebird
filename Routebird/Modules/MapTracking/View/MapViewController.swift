@@ -8,39 +8,42 @@
 import Foundation
 import MapKit
 import SnapKit
+import CoreLocation
 
 final class MapViewController: UIViewController {
     
     // MARK: - UI Components
-    
+
     private let mapView = MKMapView()
     private let startStopButton = UIButton(type: .system)
     private let resetButton = UIButton(type: .system)
     private let buttonStackView = UIStackView()
     
-    // MARK: - View Model
-    
+    // MARK: - ViewModel
+
     private let viewModel = MapViewModel()
     
-    // MARK: - Service
+    // MARK: - Services
+
     private let locationService = LocationService()
     
     // MARK: - State
-    
+
     private var hasCenteredMap = false
 
     // MARK: - View Lifecycle
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
         locationService.delegate = self
         configureUI()
         configureActions()
+        viewModel.loadRoute()
         locationService.startTracking()
     }
     
-    // MARK: - UI Configuration
+    // MARK: - UI Setup
 
     private func configureUI() {
         view.backgroundColor = .white
@@ -89,6 +92,7 @@ final class MapViewController: UIViewController {
             make.height.equalTo(48)
         }
     }
+    
     // MARK: - Actions
 
     private func configureActions() {
@@ -157,10 +161,13 @@ extension MapViewController: MKMapViewDelegate {
 }
 
 // MARK: - LocationServiceDelegate
+
 extension MapViewController: LocationServiceDelegate {
     func locationService(_ service: LocationService, didUpdateLocation location: CLLocation) {
-        centerMapOn(location)
-        hasCenteredMap = true
+        if !hasCenteredMap {
+            centerMapOn(location)
+            hasCenteredMap = true
+        }
         viewModel.updateLocation(location)
     }
 }

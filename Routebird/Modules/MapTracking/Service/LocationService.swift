@@ -22,6 +22,8 @@ final class LocationService: NSObject {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.activityType = .fitness
+        locationManager.allowsBackgroundLocationUpdates = true // For background location
+        locationManager.pausesLocationUpdatesAutomatically = false
     }
 
     func startTracking() {
