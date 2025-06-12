@@ -18,10 +18,19 @@ final class MapViewController: UIViewController {
     private let resetButton = UIButton(type: .system)
     private let buttonStackView = UIStackView()
     
+    // MARK: - View Model
+    
+    private let viewModel = MapViewModel()
+    
+    // MARK: - State
+    
+    private var hasCenteredMap = false
+
     // MARK: - View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.delegate = self
         configureUI()
         configureActions()
     }
@@ -37,6 +46,7 @@ final class MapViewController: UIViewController {
     private func configureMapView() {
         view.addSubview(mapView)
         mapView.showsUserLocation = true
+        mapView.delegate = self
 
         mapView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -76,16 +86,58 @@ final class MapViewController: UIViewController {
     }
     // MARK: - Actions
 
-        private func configureActions() {
-            startStopButton.addTarget(self, action: #selector(didTapStartStop), for: .touchUpInside)
-            resetButton.addTarget(self, action: #selector(didTapReset), for: .touchUpInside)
-        }
+    private func configureActions() {
+        startStopButton.addTarget(self, action: #selector(didTapStartStop), for: .touchUpInside)
+        resetButton.addTarget(self, action: #selector(didTapReset), for: .touchUpInside)
+    }
 
-        @objc private func didTapStartStop() {
-           //TODO
-        }
+    @objc private func didTapStartStop() {
+        viewModel.toggleTracking()
 
-        @objc private func didTapReset() {
-           //TODO
-        }
+        let isTracking = viewModel.isTracking
+        startStopButton.setTitle(isTracking ? "Stop" : "Start", for: .normal)
+        startStopButton.backgroundColor = isTracking ? .systemRed : .systemGreen
+    }
+
+    @objc private func didTapReset() {
+        viewModel.resetRoute()
+        startStopButton.setTitle("Start", for: .normal)
+        startStopButton.backgroundColor = .systemGreen
+    }
+}
+
+// MARK: - MapViewModelDelegate
+
+extension MapViewController: MapViewModelDelegate {
+    func didAddNewMarker(_ marker: Marker) {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = marker.coordinate
+        annotation.title = "Marker"
+        mapView.addAnnotation(annotation)
+    }
+
+    func didResetRoute() {
+        mapView.removeAnnotations(mapView.annotations)
+    }
+
+    func didResolveAddress(_ address: String, for marker: Marker) {
+        let alert = UIAlertController(title: "Address", message: address, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+}
+
+// MARK: - MKMapViewDelegate
+
+extension MapViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        guard
+            let coordinate = view.annotation?.coordinate,
+            let marker = viewModel.markers.first(where: {
+                $0.coordinate.latitude == coordinate.latitude &&
+                $0.coordinate.longitude == coordinate.longitude
+            })
+        else { return }
+        viewModel.resolveAddress(for: marker)
+    }
 }
