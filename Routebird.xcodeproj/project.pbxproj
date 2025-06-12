@@ -6,12 +6,16 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0C04676E2DFAEAD300385651 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0C04676D2DFAEAD300385651 /* SnapKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		0C0467542DFAE92200385651 /* Routebird.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Routebird.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		0C0467662DFAE92400385651 /* Exceptions for "Routebird" folder in "Routebird" target */ = {
+		0C04678A2DFAF0DD00385651 /* Exceptions for "Routebird" folder in "Routebird" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -24,7 +28,7 @@
 		0C0467562DFAE92200385651 /* Routebird */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				0C0467662DFAE92400385651 /* Exceptions for "Routebird" folder in "Routebird" target */,
+				0C04678A2DFAF0DD00385651 /* Exceptions for "Routebird" folder in "Routebird" target */,
 			);
 			path = Routebird;
 			sourceTree = "<group>";
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C04676E2DFAEAD300385651 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = Routebird;
 			packageProductDependencies = (
+				0C04676D2DFAEAD300385651 /* SnapKit */,
 			);
 			productName = Routebird;
 			productReference = 0C0467542DFAE92200385651 /* Routebird.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = 0C04674B2DFAE92200385651;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				0C04676C2DFAEAD300385651 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0C0467552DFAE92200385651 /* Products */;
 			projectDirPath = "";
@@ -150,7 +159,7 @@
 				INFOPLIST_FILE = Routebird/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -183,7 +192,7 @@
 				INFOPLIST_FILE = Routebird/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -345,6 +354,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0C04676C2DFAEAD300385651 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0C04676D2DFAEAD300385651 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0C04676C2DFAEAD300385651 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0C04674C2DFAE92200385651 /* Project object */;
 }
