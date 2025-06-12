@@ -59,8 +59,9 @@ A minimalist and playful iOS app for route tracking – built as a Martı case s
 
 ## 📱 How to Run
 
-1. **Clone the repo**  
-   `git clone ...`
+1. **Clone the repo**
+   ```sh
+   git clone https://github.com/ismailpalalii/Routebird.git
 2. **Install dependencies**  
    (SnapKit via SPM or CocoaPods if needed)
 3. **Open in Xcode**  
@@ -74,7 +75,10 @@ A minimalist and playful iOS app for route tracking – built as a Martı case s
 
 ---
 
-## 🖼️ Screenshots & Video
+## Video
+https://github.com/user-attachments/assets/dc8df57f-f41e-4ff2-9559-daf3f5b3baf0
+
+## 🖼️ Screenshots
 <img src="https://github.com/user-attachments/assets/17fedc28-2544-4a50-9754-8045321bf92f" width="100">
 <img src="https://github.com/user-attachments/assets/84ca8a90-9bf5-45b1-8c94-298843496ede" width="100">
 <img src="https://github.com/user-attachments/assets/f622521a-882f-400e-93ab-69817eae3a16" width="100">
