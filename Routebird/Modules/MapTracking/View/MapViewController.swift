@@ -30,6 +30,7 @@ final class MapViewController: UIViewController {
         label.isHidden = true
         return label
     }()
+    private let locateButton = UIButton(type: .system)
     
     // MARK: - ViewModel
     
@@ -62,6 +63,7 @@ final class MapViewController: UIViewController {
         configureMapView()
         configureButtons()
         configureSpeedLabel()
+        configureLocateButton()
     }
     
     private func configureMapView() {
@@ -116,6 +118,26 @@ final class MapViewController: UIViewController {
         }
     }
     
+    private func configureLocateButton() {
+        if #available(iOS 13.0, *) {
+            let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold)
+            locateButton.setImage(UIImage(systemName: "location.fill", withConfiguration: config), for: .normal)
+        } else {
+            locateButton.setTitle("Locate", for: .normal)
+        }
+        locateButton.tintColor = .systemGreen
+        locateButton.backgroundColor = UIColor.white.withAlphaComponent(0.85)
+        locateButton.layer.cornerRadius = 20
+        locateButton.clipsToBounds = true
+        view.addSubview(locateButton)
+        locateButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-128)
+            make.trailing.equalToSuperview().offset(-20)
+            make.width.height.equalTo(40)
+        }
+        locateButton.addTarget(self, action: #selector(didTapLocate), for: .touchUpInside)
+    }
+    
     // MARK: - Actions
     
     private func configureActions() {
@@ -154,6 +176,12 @@ final class MapViewController: UIViewController {
         }
     }
     
+    @objc private func didTapLocate() {
+        if let userLocation = mapView.userLocation.location {
+            centerMapOn(userLocation)
+        }
+    }
+
     @objc private func didTapReset() {
         let alert = UIAlertController(
             title: "Clear Route",
@@ -190,7 +218,8 @@ final class MapViewController: UIViewController {
         let speed = viewModel.getCurrentSpeedKmh() ?? 0
         speedLabel.text = String(format: "Speed: %.0f km/h", speed)
         speedLabel.isHidden = false
-    }}
+    }
+}
 
 // MARK: - MapViewModelDelegate
 
