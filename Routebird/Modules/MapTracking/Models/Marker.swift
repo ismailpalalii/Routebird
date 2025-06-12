@@ -4,8 +4,6 @@
 //
 //  Created by İsmail Palalı on 12.06.2025.
 //
-
-
 import Foundation
 import CoreLocation
 
@@ -15,6 +13,16 @@ struct Marker: Equatable, Codable {
     let longitude: CLLocationDegrees
     let timestamp: Date
     var address: String?
+    
+    var title: String {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        return "Checkpoint (\(formatter.string(from: timestamp)))"
+    }
+
+    var subtitle: String? {
+        address ?? nil
+    }
 
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)

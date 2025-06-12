@@ -74,6 +74,22 @@ final class MapViewModel {
             self.delegate?.didResolveAddress(name, for: marker)
         }
     }
+    
+    // MARK: - Speed Calculation
+
+       func getCurrentSpeedKmh() -> Double? {
+           guard markers.count >= 2 else { return nil }
+           let last = markers[markers.count - 1]
+           let prev = markers[markers.count - 2]
+           let lastLoc = CLLocation(latitude: last.latitude, longitude: last.longitude)
+           let prevLoc = CLLocation(latitude: prev.latitude, longitude: prev.longitude)
+           let distance = lastLoc.distance(from: prevLoc) // metre
+           let timeDiff = last.timestamp.timeIntervalSince(prev.timestamp)
+           guard timeDiff > 0 else { return nil }
+           let speedMs = distance / timeDiff
+           let speedKmh = speedMs * 3.6
+           return speedKmh
+       }
 
     // MARK: - Persistence
 

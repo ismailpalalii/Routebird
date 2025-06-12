@@ -18,6 +18,18 @@ final class MapViewController: UIViewController {
     private let startStopButton = UIButton(type: .system)
     private let resetButton = UIButton(type: .system)
     private let buttonStackView = UIStackView()
+    private let speedLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Speed: -- km/h"
+        label.font = .systemFont(ofSize: 13, weight: .semibold)
+        label.textColor = .white
+        label.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.88)
+        label.layer.cornerRadius = 8
+        label.clipsToBounds = true
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
     
     // MARK: - ViewModel
 
@@ -49,6 +61,7 @@ final class MapViewController: UIViewController {
         view.backgroundColor = .white
         configureMapView()
         configureButtons()
+        configureSpeedLabel()
     }
     
     private func configureMapView() {
@@ -93,6 +106,16 @@ final class MapViewController: UIViewController {
         }
     }
     
+    private func configureSpeedLabel() {
+        view.addSubview(speedLabel)
+        speedLabel.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(12)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(210)
+            make.height.equalTo(32)
+        }
+    }
+    
     // MARK: - Actions
 
     private func configureActions() {
@@ -106,12 +129,17 @@ final class MapViewController: UIViewController {
         let isTracking = viewModel.isTracking
         startStopButton.setTitle(isTracking ? "Stop" : "Start", for: .normal)
         startStopButton.backgroundColor = isTracking ? .systemRed : .systemGreen
+        speedLabel.isHidden = !isTracking
+        if isTracking {
+            updateSpeedLabel()
+        }
     }
 
     @objc private func didTapReset() {
         viewModel.resetRoute()
         startStopButton.setTitle("Start", for: .normal)
         startStopButton.backgroundColor = .systemGreen
+        speedLabel.isHidden = true
     }
     
     private func centerMapOn(_ location: CLLocation) {
@@ -122,7 +150,16 @@ final class MapViewController: UIViewController {
         )
         mapView.setRegion(region, animated: true)
     }
-}
+    
+    private func updateSpeedLabel() {
+        guard viewModel.isTracking else {
+            speedLabel.isHidden = true
+            return
+        }
+        let speed = viewModel.getCurrentSpeedKmh() ?? 0
+        speedLabel.text = String(format: "Speed: %.0f km/h", speed)
+        speedLabel.isHidden = false
+    }}
 
 // MARK: - MapViewModelDelegate
 
@@ -130,12 +167,15 @@ extension MapViewController: MapViewModelDelegate {
     func didAddNewMarker(_ marker: Marker) {
         let annotation = MKPointAnnotation()
         annotation.coordinate = marker.coordinate
-        annotation.title = "Marker"
+        annotation.title = marker.title
+        annotation.subtitle = marker.subtitle
         mapView.addAnnotation(annotation)
+        updateSpeedLabel()
     }
 
     func didResetRoute() {
         mapView.removeAnnotations(mapView.annotations)
+        speedLabel.text = "Speed: -- km/h"
     }
 
     func didResolveAddress(_ address: String, for marker: Marker) {
@@ -146,17 +186,25 @@ extension MapViewController: MapViewModelDelegate {
 }
 
 // MARK: - MKMapViewDelegate
-
 extension MapViewController: MKMapViewDelegate {
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        guard
-            let coordinate = view.annotation?.coordinate,
-            let marker = viewModel.markers.first(where: {
-                $0.coordinate.latitude == coordinate.latitude &&
-                $0.coordinate.longitude == coordinate.longitude
-            })
-        else { return }
-        viewModel.resolveAddress(for: marker)
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        guard !(annotation is MKUserLocation) else { return nil }
+
+        let identifier = "BirdMarker"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+
+        if annotationView == nil {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+        } else {
+            annotationView?.annotation = annotation
+        }
+
+        annotationView?.image = UIImage(named: "bird")
+        annotationView?.frame.size = CGSize(width: 36, height: 36)
+        annotationView?.centerOffset = CGPoint(x: 0, y: -18)
+
+        return annotationView
     }
 }
 
