@@ -34,6 +34,11 @@ final class LocationService: NSObject {
     func stopTracking() {
         locationManager.stopUpdatingLocation()
     }
+    
+    func hasLocationPermission() -> Bool {
+        let status = locationManager.authorizationStatus
+        return status == .authorizedAlways || status == .authorizedWhenInUse
+    }
 }
 
 extension LocationService: CLLocationManagerDelegate {
