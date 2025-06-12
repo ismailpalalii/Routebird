@@ -23,6 +23,12 @@
     <key>UIMainStoryboardFile</key>
     <string></string>
 
+    <!-- LOCATION PERMISSIONS -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Your location is needed to track your route on the map.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Your location is needed to track your route on the map, even when the app is in the background.</string>
+
     <key>UIApplicationSceneManifest</key>
     <dict>
         <key>UIApplicationSupportsMultipleScenes</key>

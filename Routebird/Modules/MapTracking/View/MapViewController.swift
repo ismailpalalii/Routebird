@@ -22,6 +22,9 @@ final class MapViewController: UIViewController {
     
     private let viewModel = MapViewModel()
     
+    // MARK: - Service
+    private let locationService = LocationService()
+    
     // MARK: - State
     
     private var hasCenteredMap = false
@@ -31,8 +34,10 @@ final class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
+        locationService.delegate = self
         configureUI()
         configureActions()
+        locationService.startTracking()
     }
     
     // MARK: - UI Configuration
@@ -104,6 +109,15 @@ final class MapViewController: UIViewController {
         startStopButton.setTitle("Start", for: .normal)
         startStopButton.backgroundColor = .systemGreen
     }
+    
+    private func centerMapOn(_ location: CLLocation) {
+        let region = MKCoordinateRegion(
+            center: location.coordinate,
+            latitudinalMeters: 800,
+            longitudinalMeters: 800
+        )
+        mapView.setRegion(region, animated: true)
+    }
 }
 
 // MARK: - MapViewModelDelegate
@@ -139,5 +153,14 @@ extension MapViewController: MKMapViewDelegate {
             })
         else { return }
         viewModel.resolveAddress(for: marker)
+    }
+}
+
+// MARK: - LocationServiceDelegate
+extension MapViewController: LocationServiceDelegate {
+    func locationService(_ service: LocationService, didUpdateLocation location: CLLocation) {
+        centerMapOn(location)
+        hasCenteredMap = true
+        viewModel.updateLocation(location)
     }
 }
