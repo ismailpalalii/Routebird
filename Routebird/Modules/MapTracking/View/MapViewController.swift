@@ -125,21 +125,36 @@ final class MapViewController: UIViewController {
 
     @objc private func didTapStartStop() {
         viewModel.toggleTracking()
-
         let isTracking = viewModel.isTracking
         startStopButton.setTitle(isTracking ? "Stop" : "Start", for: .normal)
         startStopButton.backgroundColor = isTracking ? .systemRed : .systemGreen
+
         speedLabel.isHidden = !isTracking
         if isTracking {
             updateSpeedLabel()
+            showToast(message: "Tracking started!")
+        } else {
+            showToast(message: "Tracking stopped!")
         }
     }
-
+   
     @objc private func didTapReset() {
-        viewModel.resetRoute()
-        startStopButton.setTitle("Start", for: .normal)
-        startStopButton.backgroundColor = .systemGreen
-        speedLabel.isHidden = true
+        let alert = UIAlertController(
+            title: "Clear Route",
+            message: "Are you sure you want to clear your route?",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Clear", style: .destructive, handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.viewModel.resetRoute()
+            self.viewModel.isTracking = false
+            self.startStopButton.setTitle("Start", for: .normal)
+            self.startStopButton.backgroundColor = .systemGreen
+            self.showToast(message: "Route cleared!")
+            self.speedLabel.isHidden = true
+        }))
+        present(alert, animated: true)
     }
     
     private func centerMapOn(_ location: CLLocation) {
