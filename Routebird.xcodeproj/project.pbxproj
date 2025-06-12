@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0C04676E2DFAEAD300385651 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0C04676D2DFAEAD300385651 /* SnapKit */; };
+		0C0467702DFAEAD300385651 /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 0C04676F2DFAEAD300385651 /* SnapKit-Dynamic */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		0C0467542DFAE92200385651 /* Routebird.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Routebird.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +41,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C04676E2DFAEAD300385651 /* SnapKit in Frameworks */,
+				0C0467702DFAEAD300385651 /* SnapKit-Dynamic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +85,8 @@
 			);
 			name = Routebird;
 			packageProductDependencies = (
+				0C04676D2DFAEAD300385651 /* SnapKit */,
+				0C04676F2DFAEAD300385651 /* SnapKit-Dynamic */,
 			);
 			productName = Routebird;
 			productReference = 0C0467542DFAE92200385651 /* Routebird.app */;
@@ -107,6 +116,9 @@
 			);
 			mainGroup = 0C04674B2DFAE92200385651;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				0C04676C2DFAEAD300385651 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0C0467552DFAE92200385651 /* Products */;
 			projectDirPath = "";
@@ -345,6 +357,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0C04676C2DFAEAD300385651 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0C04676D2DFAEAD300385651 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0C04676C2DFAEAD300385651 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		0C04676F2DFAEAD300385651 /* SnapKit-Dynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0C04676C2DFAEAD300385651 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = "SnapKit-Dynamic";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0C04674C2DFAE92200385651 /* Project object */;
 }
