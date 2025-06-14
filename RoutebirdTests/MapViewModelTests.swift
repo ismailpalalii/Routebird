@@ -74,11 +74,28 @@ final class MapViewModelTests: XCTestCase {
         XCTAssertEqual(newViewModel.markers.count, 1)
         XCTAssertEqual(newViewModel.markers.first?.latitude, 37.0)
     }
+
+    func testErrorHandlingCallsDelegate() {
+        let failingViewModel = MapViewModel()
+        let mockDelegate = MockDelegate()
+        failingViewModel.delegate = mockDelegate
+
+        let error = RoutebirdError.permissionDenied
+        failingViewModel.delegate?.didEncounterError(error)
+
+        XCTAssertEqual(mockDelegate.capturedError, error)
+    }
 }
 
 // MARK: - Mock Delegate
 
 final class MockDelegate: MapViewModelDelegate {
+    var capturedError: RoutebirdError?
+
+    func didEncounterError(_ error: Routebird.RoutebirdError) {
+        capturedError = error
+    }
+
     func didAddNewMarker(_ marker: Marker) { }
     func didResetRoute() { }
     func didResolveAddress(_ address: String, for marker: Marker) { }
