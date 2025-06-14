@@ -20,7 +20,7 @@ final class MapViewController: UIViewController {
     private let buttonStackView = UIStackView()
     private let speedLabel: UILabel = {
         let label = UILabel()
-        label.text = "Speed: -- km/h"
+        label.text = "speed_placeholder".localized
         label.font = .systemFont(ofSize: 13, weight: .semibold)
         label.textColor = .white
         label.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.88)
@@ -78,13 +78,13 @@ final class MapViewController: UIViewController {
     
     private func configureButtons() {
         // Configure button styles
-        startStopButton.setTitle("Start", for: .normal)
+        startStopButton.setTitle("start".localized, for: .normal)
         startStopButton.setTitleColor(.white, for: .normal)
         startStopButton.backgroundColor = UIColor.systemGreen
         startStopButton.layer.cornerRadius = 12
         startStopButton.titleLabel?.font = .boldSystemFont(ofSize: 16)
         
-        resetButton.setTitle("Reset", for: .normal)
+        resetButton.setTitle("reset".localized, for: .normal)
         resetButton.setTitleColor(.white, for: .normal)
         resetButton.backgroundColor = UIColor.systemGray
         resetButton.layer.cornerRadius = 12
@@ -149,12 +149,12 @@ final class MapViewController: UIViewController {
         // MARK: - Check location permission
         if !viewModel.isTracking && !locationService.hasLocationPermission() {
             let alert = UIAlertController(
-                title: "Location Permission Needed",
-                message: "To track your route, please allow location access in Settings.",
+                title: "location_permission_needed".localized,
+                message: "location_permission_message".localized,
                 preferredStyle: .alert
             )
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-            alert.addAction(UIAlertAction(title: "Open Settings", style: .default) { _ in
+            alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel))
+            alert.addAction(UIAlertAction(title: "open_settings".localized, style: .default) { _ in
                 if let url = URL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.open(url)
                 }
@@ -164,15 +164,15 @@ final class MapViewController: UIViewController {
         }
         viewModel.toggleTracking()
         let isTracking = viewModel.isTracking
-        startStopButton.setTitle(isTracking ? "Stop" : "Start", for: .normal)
+        startStopButton.setTitle(isTracking ? "stop".localized : "start".localized, for: .normal)
         startStopButton.backgroundColor = isTracking ? .systemRed : .systemGreen
         
         speedLabel.isHidden = !isTracking
         if isTracking {
             updateSpeedLabel()
-            showToast(message: "Tracking started!")
+            showToast(message: "tracking_started".localized)
         } else {
-            showToast(message: "Tracking stopped!")
+            showToast(message: "tracking_stopped".localized)
         }
     }
     
@@ -184,18 +184,18 @@ final class MapViewController: UIViewController {
 
     @objc private func didTapReset() {
         let alert = UIAlertController(
-            title: "Clear Route",
-            message: "Are you sure you want to clear your route?",
+            title: "clear_route_title".localized,
+            message: "clear_route_message".localized,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Clear", style: .destructive, handler: { [weak self] _ in
+        alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel))
+        alert.addAction(UIAlertAction(title: "clear".localized, style: .destructive, handler: { [weak self] _ in
             guard let self = self else { return }
             self.viewModel.resetRoute()
             self.viewModel.isTracking = false
-            self.startStopButton.setTitle("Start", for: .normal)
+            self.startStopButton.setTitle("start".localized, for: .normal)
             self.startStopButton.backgroundColor = .systemGreen
-            self.showToast(message: "Route cleared!")
+            self.showToast(message: "route_cleared".localized)
             self.speedLabel.isHidden = true
         }))
         present(alert, animated: true)
@@ -216,7 +216,7 @@ final class MapViewController: UIViewController {
             return
         }
         let speed = viewModel.getCurrentSpeedKmh() ?? 0
-        speedLabel.text = String(format: "Speed: %.0f km/h", speed)
+        speedLabel.text = "speed_placeholder".localizedFormat(speed)
         speedLabel.isHidden = false
     }
 }
@@ -235,12 +235,22 @@ extension MapViewController: MapViewModelDelegate {
     
     func didResetRoute() {
         mapView.removeAnnotations(mapView.annotations)
-        speedLabel.text = "Speed: -- km/h"
+        speedLabel.text = "speed_placeholder".localized
     }
     
     func didResolveAddress(_ address: String, for marker: Marker) {
-        let alert = UIAlertController(title: "Address", message: address, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        let alert = UIAlertController(title: "address".localized, message: address, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "ok".localized, style: .default))
+        present(alert, animated: true)
+    }
+    
+    func didEncounterError(_ error: RoutebirdError) {
+        let alert = UIAlertController(
+            title: "error".localized,
+            message: error.localizedDescription,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "ok".localized, style: .default))
         present(alert, animated: true)
     }
 }
@@ -260,7 +270,7 @@ extension MapViewController: MKMapViewDelegate {
             annotationView?.annotation = annotation
         }
         
-        annotationView?.image = UIImage(named: "bird")
+        annotationView?.image = UIImage(named: "birdFeather")
         annotationView?.frame.size = CGSize(width: 36, height: 36)
         annotationView?.centerOffset = CGPoint(x: 0, y: -18)
         
