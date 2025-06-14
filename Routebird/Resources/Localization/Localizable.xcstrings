@@ -120,6 +120,23 @@
         }
       }
     },
+    "error_deletion_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An error occurred while deleting data."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veriler silinirken bir hata oluştu."
+          }
+        }
+      }
+    },
     "error_encoding_failed" : {
       "extractionState" : "manual",
       "localizations" : {
