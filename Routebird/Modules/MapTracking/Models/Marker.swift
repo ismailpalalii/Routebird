@@ -14,20 +14,25 @@ struct Marker: Equatable, Codable {
     let timestamp: Date
     var address: String?
     
-    var title: String {
-        let formatter = DateFormatter()
-        formatter.timeStyle = .short
-        return "Checkpoint (\(formatter.string(from: timestamp)))"
-    }
-
-    var subtitle: String? {
-        address ?? nil
-    }
-
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 
+    var title: String {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        let time = formatter.string(from: timestamp)
+        return String(format: NSLocalizedString("marker_title", comment: ""), time)
+    }
+
+    var subtitle: String? {
+        if let address = address, !address.isEmpty {
+            return address
+        } else {
+            return String(format: NSLocalizedString("marker_coordinates", comment: ""), latitude, longitude)
+        }
+    }
+    
     init(coordinate: CLLocationCoordinate2D, timestamp: Date = Date(), address: String? = nil) {
         self.id = UUID()
         self.latitude = coordinate.latitude
