@@ -6,136 +6,122 @@ A minimalist and playful iOS app for route tracking – built as a Martı case s
 
 ## 🚀 Features
 
-### **Must-Haves**
-- **Live Location Tracking:**  
+### Must-Haves
+
+* **Live Location Tracking:**
   The app follows the user’s location using CoreLocation.
-- **Marker Placement:**  
+* **Marker Placement:**
   A new marker is placed on the map every 100 meters traveled.
-- **Pause/Resume & Reset Route:**  
+* **Pause/Resume & Reset Route:**
   Users can start, stop (pause/resume), and reset route tracking with easy buttons.
-- **Map Centering:**  
+* **Map Centering:**
   The map auto-centers on the user at start, and can be re-centered any time.
-- **Address Details:**  
-  Tapping a marker shows its address (reverse geocoding).
-- **Background Mode:**  
+* **Address Details:**
+  Tapping a marker shows its address (reverse geocoding) or coordinates if unavailable.
+* **Background Mode:**
   The app keeps tracking in the background if permissions are granted.
-- **Persistent Route:**  
+* **Persistent Route:**
   Markers are saved and restored when the app restarts.
 
----
+### Nice-to-Haves & Enhancements
 
-### **Nice-to-Haves & Enhancements**
-- **Custom Marker Icon:**  
+* **Custom Marker Icon:**
   Cute bird icon markers, visually consistent with the Routebird brand.
-- **Marker Titles:**  
-  Markers display as "Checkpoint (HH:mm, lat/lon)" for clarity.
-- **Dynamic Speed Indicator:**  
+* **Localized Marker Title:**
+  Markers show localized fun titles like “The bird was here 🐦” instead of generic timestamps.
+* **Dynamic Speed Indicator:**
   Shows current and average speed in km/h when tracking is active.
-- **Reset Confirmation:**  
+* **Reset Confirmation:**
   Resets route only after confirmation, then shows a toast message ("Route cleared!").
-- **Permission Alerts:**  
+* **Permission Alerts:**
   If location permission is missing/denied, users get a clear alert before tracking starts.
-- **Locate Button:**  
+* **Locate Button:**
   A floating “target” button (bottom right) to instantly center the map on your location.
-- **Launch Screen:**  
+* **Launch Screen:**
   Branded splash with bird logo and Routebird name for a smooth launch experience.
-- **Unit Tests:**  
+* **Error Handling:**
+  Structured error management via `RoutebirdError` enum with localized messages.
+* **Localization Support:**
+  Full Turkish and English localization with dynamic string utilities for UIKit and SwiftUI.
+* **Unit Tests:**
   Basic unit tests for MapViewModel and LocationService logic (can be extended).
-- **Minimal, Touch-Friendly UI:**  
+* **Minimal, Touch-Friendly UI:**
   SnapKit-powered responsive layout, big touch targets, native UIKit feel.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- UIKit & SnapKit (no Storyboards except LaunchScreen)
-- MVVM Architecture
-- CoreLocation & MapKit
-- Codable, UserDefaults for persistence
-- Custom annotations and views
-- Unit Testing (XCTest)
+* UIKit & SnapKit (no Storyboards except LaunchScreen)
+* MVVM Architecture
+* CoreLocation & MapKit
+* Codable, UserDefaults for persistence
+* Custom annotations and views
+* Unit Testing (XCTest)
+* Error & Localization handling
 
 ---
 
 ## 📱 How to Run
 
 1. **Clone the repo**
+
    ```sh
    git clone https://github.com/ismailpalalii/Routebird.git
-2. **Install dependencies**  
+   ```
+2. **Install dependencies**
    (SnapKit via SPM or CocoaPods if needed)
-3. **Open in Xcode**  
+3. **Open in Xcode**
    Xcode 15+ recommended
-4. **Set Deployment Target**  
+4. **Set Deployment Target**
    iOS 16.0+
-5. **Add Bird Asset**  
+5. **Add Bird Asset**
    (See /Assets)
-6. **Run on Simulator or Device**  
+6. **Run on Simulator or Device**
    Enable location in simulator; try “City Run” or “Apple” for route simulation!
 
 ---
 
 ## Video
-https://github.com/user-attachments/assets/dc8df57f-f41e-4ff2-9559-daf3f5b3baf0
+
+[https://github.com/user-attachments/assets/ab324a91-4592-40d5-a275-726ae336980a](https://github.com/user-attachments/assets/ab324a91-4592-40d5-a275-726ae336980a)
 
 ## 🖼️ Screenshots
-<img src="https://github.com/user-attachments/assets/17fedc28-2544-4a50-9754-8045321bf92f" width="100">
-<img src="https://github.com/user-attachments/assets/84ca8a90-9bf5-45b1-8c94-298843496ede" width="100">
-<img src="https://github.com/user-attachments/assets/f622521a-882f-400e-93ab-69817eae3a16" width="100">
-<img src="https://github.com/user-attachments/assets/03d68a6d-6bd4-4569-90cd-aa1ff1ba7de0" width="100">
-<img src="https://github.com/user-attachments/assets/72f752a9-03b9-4790-965d-8b0f9331ac9f" width="100">
-<img src="https://github.com/user-attachments/assets/0ce193d6-8d3f-4637-8e7c-6d57f08fe2dd" width="100">
+
+<img src="https://github.com/user-attachments/assets/fccdceca-53d1-4e4f-b5dc-c2bdbd2addba" width="100">
+<img src="https://github.com/user-attachments/assets/90ee0c92-4619-49fe-a224-bfdb0601345c" width="100">
+<img src="https://github.com/user-attachments/assets/062a5974-2e9d-46c2-a132-595189b3468a" width="100">
+<img src="https://github.com/user-attachments/assets/940cc494-436e-49fa-a88d-9e291b300162" width="100">
 
 ---
 
 ## 👨‍💻 Development Approach
 
-1. **Task Breakdown:**  
+1. **Task Breakdown:**
    Every requirement is split into an atomic task (with a clear Task ID, e.g. RB-1002).
-2. **Feature Branching:**  
+2. **Feature Branching:**
    New branches are created for each task under `feature/`, e.g. `feature/RB-1004-ui-ux-enhancements`.
-3. **Atomic, Isolated PRs:**  
-   Each feature branch is developed, reviewed, and tested separately.  
+3. **Atomic, Isolated PRs:**
+   Each feature branch is developed, reviewed, and tested separately.
    When complete, a **pull request (PR)** is opened and merged into `development`.
-4. **Strict Separation of Concerns:**  
-   UI and business logic are separated (UIKit + MVVM).  
+4. **Strict Separation of Concerns:**
+   UI and business logic are separated (UIKit + MVVM).
    Service, model, and UI layers do not mix.
-5. **Continuous Integration:**  
+5. **Continuous Integration:**
    Each PR includes necessary unit tests and documentation if needed.
-6. **Permissions & Background Modes:**  
+6. **Permissions & Background Modes:**
    All required permissions and capabilities are included with each relevant feature branch.
-7. **Code Quality:**  
-   Code is thoroughly commented, modular, and readable.  
+7. **Code Quality:**
+   Code is thoroughly commented, modular, and readable.
    Consistent naming conventions and best practices are followed.
-
-## 📋 Must-Have List
-
-- [x] Live location tracking (foreground & background)
-- [x] Marker every 100 meters
-- [x] Pause/resume & reset controls
-- [x] Address on marker tap
-- [x] User permission/alerts
-- [x] Persistent route
-
----
-
-## ✨ Additional Improvements
-
-- [x] Custom brand icon for markers
-- [x] Speed/average speed display
-- [x] User-friendly reset flow
-- [x] Toast & alert messages
-- [x] Locate button (like Martı/Uber)
-- [x] Branded launch screen
-- [x] Basic unit tests
 
 ---
 
 ## 📢 Notes
 
-- **No third-party analytics or tracking.**
-- **No sensitive data stored.**
-- For demonstration purposes – contact [ismail.palali.pp@gmail.com] for feedback!
+* **No third-party analytics or tracking.**
+* **No sensitive data stored.**
+* For demonstration purposes – contact \[[ismail.palali.pp@gmail.com](mailto:ismail.palali.pp@gmail.com)] for feedback!
 
 ---
 
