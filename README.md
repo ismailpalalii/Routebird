@@ -20,8 +20,8 @@ A minimalist and playful iOS app for route tracking – built as a Martı case s
   Tapping a marker shows its address (reverse geocoding) or coordinates if unavailable.
 * **Background Mode:**
   The app keeps tracking in the background if permissions are granted.
-* **Persistent Route:**
-  Markers are saved and restored when the app restarts.
+* **Persistent Route with Core Data:**
+  Markers are saved and restored using Core Data when the app restarts.
 
 ### Nice-to-Haves & Enhancements
 
@@ -44,7 +44,7 @@ A minimalist and playful iOS app for route tracking – built as a Martı case s
 * **Localization Support:**
   Full Turkish and English localization with dynamic string utilities for UIKit and SwiftUI.
 * **Unit Tests:**
-  Basic unit tests for MapViewModel and LocationService logic (can be extended).
+  Basic unit tests for MapViewModel, LocationService, and storage logic.
 * **Minimal, Touch-Friendly UI:**
   SnapKit-powered responsive layout, big touch targets, native UIKit feel.
 
@@ -55,7 +55,7 @@ A minimalist and playful iOS app for route tracking – built as a Martı case s
 * UIKit & SnapKit (no Storyboards except LaunchScreen)
 * MVVM Architecture
 * CoreLocation & MapKit
-* Codable, UserDefaults for persistence
+* Core Data for persistence
 * Custom annotations and views
 * Unit Testing (XCTest)
 * Error & Localization handling
@@ -95,7 +95,7 @@ A minimalist and playful iOS app for route tracking – built as a Martı case s
 
 ---
 
-## 👨‍💻 Development Approach
+## 👨‍💼 Development Approach
 
 1. **Task Breakdown:**
    Every requirement is split into an atomic task (with a clear Task ID, e.g. RB-1002).
@@ -121,7 +121,7 @@ A minimalist and playful iOS app for route tracking – built as a Martı case s
 
 * **No third-party analytics or tracking.**
 * **No sensitive data stored.**
-* For demonstration purposes – contact \[[ismail.palali.pp@gmail.com](mailto:ismail.palali.pp@gmail.com)] for feedback!
+* For demonstration purposes – contact [ismail.palali.pp@gmail.com](mailto:ismail.palali.pp@gmail.com) for feedback!
 
 ---
 
