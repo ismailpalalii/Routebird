@@ -13,6 +13,7 @@ protocol MapViewModelDelegate: AnyObject {
     func didAddNewMarker(_ marker: Marker)
     func didResetRoute()
     func didResolveAddress(_ address: String, for marker: Marker)
+    func didEncounterError(_ error: RoutebirdError)
 }
 
 final class MapViewModel {
@@ -68,45 +69,72 @@ final class MapViewModel {
 
     func resolveAddress(for marker: Marker) {
         let location = CLLocation(latitude: marker.latitude, longitude: marker.longitude)
-        geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, _ in
+        geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, error in
             guard let self = self else { return }
-            let name = placemarks?.first?.name ?? "No address found"
-            self.delegate?.didResolveAddress(name, for: marker)
+
+            guard error == nil, let placemark = placemarks?.first else {
+                self.delegate?.didResolveAddress("📍 " + "marker_address_error".localized, for: marker)
+                return
+            }
+
+            let shortAddress = [placemark.thoroughfare,
+                                placemark.subThoroughfare,
+                                placemark.locality]
+                .compactMap { $0 }
+                .joined(separator: ", ")
+
+            var updatedMarker = marker
+            updatedMarker.address = shortAddress
+
+            if let index = self.markers.firstIndex(where: { $0.id == marker.id }) {
+                self.markers[index] = updatedMarker
+            }
+
+            self.delegate?.didResolveAddress(shortAddress, for: updatedMarker)
+            self.saveRoute()
         }
     }
-    
     // MARK: - Speed Calculation
 
-       func getCurrentSpeedKmh() -> Double? {
-           guard markers.count >= 2 else { return nil }
-           let last = markers[markers.count - 1]
-           let prev = markers[markers.count - 2]
-           let lastLoc = CLLocation(latitude: last.latitude, longitude: last.longitude)
-           let prevLoc = CLLocation(latitude: prev.latitude, longitude: prev.longitude)
-           let distance = lastLoc.distance(from: prevLoc) // metre
-           let timeDiff = last.timestamp.timeIntervalSince(prev.timestamp)
-           guard timeDiff > 0 else { return nil }
-           let speedMs = distance / timeDiff
-           let speedKmh = speedMs * 3.6
-           return speedKmh
-       }
+    func getCurrentSpeedKmh() -> Double? {
+        guard markers.count >= 2 else { return nil }
+        let last = markers[markers.count - 1]
+        let prev = markers[markers.count - 2]
+        let lastLoc = CLLocation(latitude: last.latitude, longitude: last.longitude)
+        let prevLoc = CLLocation(latitude: prev.latitude, longitude: prev.longitude)
+        let distance = lastLoc.distance(from: prevLoc)
+        let timeDiff = last.timestamp.timeIntervalSince(prev.timestamp)
+        guard timeDiff > 0 else { return nil }
+        return (distance / timeDiff) * 3.6
+    }
 
     // MARK: - Persistence
 
     func saveRoute() {
+        if markers.isEmpty {
+            UserDefaults.standard.removeObject(forKey: routeKey)
+            return
+        }
+
         let encoder = JSONEncoder()
-        if let data = try? encoder.encode(markers) {
-            print("💾 Saving \(markers.count) markers")
+        do {
+            let data = try encoder.encode(markers)
             UserDefaults.standard.set(data, forKey: routeKey)
-        } else {
-            print("❌ Failed to encode markers")
+        } catch {
+            print("❌ Encoding error: \(error.localizedDescription)")
+            delegate?.didEncounterError(.encodingFailed)
         }
     }
+
     func loadRoute() {
+        guard let data = UserDefaults.standard.data(forKey: routeKey) else {
+            print("📭 No saved markers found in UserDefaults")
+            return
+        }
+
         let decoder = JSONDecoder()
-        if let data = UserDefaults.standard.data(forKey: routeKey),
-           let savedMarkers = try? decoder.decode([Marker].self, from: data) {
-            print("📥 Loaded \(savedMarkers.count) markers")
+        do {
+            let savedMarkers = try decoder.decode([Marker].self, from: data)
             markers = savedMarkers
             delegate?.didResetRoute()
             for marker in markers {
@@ -116,8 +144,9 @@ final class MapViewModel {
                 let loc = CLLocation(latitude: last.latitude, longitude: last.longitude)
                 lastRecordedLocation = loc
             }
-        } else {
-            print("📭 No saved markers found in UserDefaults")
+        } catch {
+            print("❌ Decoding error: \(error.localizedDescription)")
+            delegate?.didEncounterError(.decodingFailed)
         }
     }
 }

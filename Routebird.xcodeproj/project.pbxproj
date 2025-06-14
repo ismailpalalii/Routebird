@@ -29,9 +29,16 @@
 		0C04678A2DFAF0DD00385651 /* Exceptions for "Routebird" folder in "Routebird" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Resources/Info.plist,
 			);
 			target = 0C0467532DFAE92200385651 /* Routebird */;
+		};
+		0C387BB22DFDF6AA00FB9DCF /* Exceptions for "Routebird" folder in "RoutebirdTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Localization/Localizable.xcstrings,
+			);
+			target = 0C387B4E2DFB736F00FB9DCF /* RoutebirdTests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -40,6 +47,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				0C04678A2DFAF0DD00385651 /* Exceptions for "Routebird" folder in "Routebird" target */,
+				0C387BB22DFDF6AA00FB9DCF /* Exceptions for "Routebird" folder in "RoutebirdTests" target */,
 			);
 			path = Routebird;
 			sourceTree = "<group>";
@@ -162,6 +170,7 @@
 			knownRegions = (
 				en,
 				Base,
+				tr,
 			);
 			mainGroup = 0C04674B2DFAE92200385651;
 			minimizedProjectReferenceProxies = 1;
@@ -231,7 +240,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Y3RD9XZC35;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Routebird/Info.plist;
+				INFOPLIST_FILE = Routebird/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
@@ -264,7 +273,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Y3RD9XZC35;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Routebird/Info.plist;
+				INFOPLIST_FILE = Routebird/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
@@ -347,6 +356,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -403,6 +413,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
