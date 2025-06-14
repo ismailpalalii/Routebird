@@ -16,11 +16,10 @@ final class MapViewModelTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        viewModel = MapViewModel()
+        let mockStorage = MockStorage()
+        viewModel = MapViewModel(storage: mockStorage)
         delegate = MockDelegate()
         viewModel.delegate = delegate
-        // Clean UserDefaults before each test
-        UserDefaults.standard.removeObject(forKey: "routeMarkers")
     }
 
     override func tearDown() {
@@ -62,15 +61,18 @@ final class MapViewModelTests: XCTestCase {
     }
 
     func testPersistence() {
+        let mockStorage = MockStorage()
+        viewModel = MapViewModel(storage: mockStorage)
         viewModel.isTracking = true
         let location = CLLocation(latitude: 37.0, longitude: 29.0)
         viewModel.updateLocation(location)
         viewModel.saveRoute()
         
-        let newViewModel = MapViewModel()
+        let newViewModel = MapViewModel(storage: mockStorage)
         let mock = MockDelegate()
         newViewModel.delegate = mock
         newViewModel.loadRoute()
+        
         XCTAssertEqual(newViewModel.markers.count, 1)
         XCTAssertEqual(newViewModel.markers.first?.latitude, 37.0)
     }
@@ -80,10 +82,19 @@ final class MapViewModelTests: XCTestCase {
         let mockDelegate = MockDelegate()
         failingViewModel.delegate = mockDelegate
 
-        let error = RoutebirdError.permissionDenied
-        failingViewModel.delegate?.didEncounterError(error)
+        let expectedError = RoutebirdError.permissionDenied
+        failingViewModel.delegate?.didEncounterError(expectedError)
 
-        XCTAssertEqual(mockDelegate.capturedError, error)
+        if let capturedError = mockDelegate.capturedError {
+            switch capturedError {
+            case .permissionDenied:
+                XCTAssertTrue(true)
+            default:
+                XCTFail("Unexpected error received")
+            }
+        } else {
+            XCTFail("No error captured")
+        }
     }
 }
 

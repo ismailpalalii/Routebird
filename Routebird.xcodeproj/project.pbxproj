@@ -36,6 +36,7 @@
 		0C387BB22DFDF6AA00FB9DCF /* Exceptions for "Routebird" folder in "RoutebirdTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Modules/Core/Storage/MarkerEntity.xcdatamodeld,
 				Resources/Localization/Localizable.xcstrings,
 			);
 			target = 0C387B4E2DFB736F00FB9DCF /* RoutebirdTests */;

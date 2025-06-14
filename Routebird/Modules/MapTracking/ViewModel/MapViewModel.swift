@@ -27,18 +27,16 @@ final class MapViewModel {
 
     private let geocoder = CLGeocoder()
     private let routeKey = "routeMarkers"
+    private let storage: MarkerStorageProtocol
+
+        init(storage: MarkerStorageProtocol = MarkerStorage()) {
+            self.storage = storage
+        }
 
     // MARK: - Tracking Control
 
     func toggleTracking() {
         isTracking.toggle()
-    }
-
-    func resetRoute() {
-        markers.removeAll()
-        lastRecordedLocation = nil
-        delegate?.didResetRoute()
-        saveRoute()
     }
 
     // MARK: - Location Handling
@@ -62,7 +60,11 @@ final class MapViewModel {
         let marker = Marker(coordinate: location.coordinate)
         markers.append(marker)
         delegate?.didAddNewMarker(marker)
-        saveRoute()
+        do {
+            try storage.saveMarker(marker)
+        } catch {
+            delegate?.didEncounterError(error as? RoutebirdError ?? .coreDataSaveFailed(error))
+        }
     }
 
     // MARK: - Reverse Geocoding
@@ -127,26 +129,28 @@ final class MapViewModel {
     }
 
     func loadRoute() {
-        guard let data = UserDefaults.standard.data(forKey: routeKey) else {
-            print("📭 No saved markers found in UserDefaults")
-            return
-        }
-
-        let decoder = JSONDecoder()
         do {
-            let savedMarkers = try decoder.decode([Marker].self, from: data)
-            markers = savedMarkers
+            markers = try storage.fetchMarkers()
             delegate?.didResetRoute()
             for marker in markers {
                 delegate?.didAddNewMarker(marker)
             }
             if let last = markers.last {
-                let loc = CLLocation(latitude: last.latitude, longitude: last.longitude)
-                lastRecordedLocation = loc
+                lastRecordedLocation = CLLocation(latitude: last.latitude, longitude: last.longitude)
             }
         } catch {
-            print("❌ Decoding error: \(error.localizedDescription)")
-            delegate?.didEncounterError(.decodingFailed)
+            delegate?.didEncounterError(error as? RoutebirdError ?? .decodingFailed)
+        }
+    }
+    
+    func resetRoute() {
+        markers.removeAll()
+        lastRecordedLocation = nil
+        delegate?.didResetRoute()
+        do {
+            try storage.deleteAllMarkers()
+        } catch {
+            delegate?.didEncounterError(error as? RoutebirdError ?? .coreDataDeletionFailed)
         }
     }
 }
